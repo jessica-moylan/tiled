@@ -163,6 +163,26 @@ class SimpleTiledServer:
   </tr>
 </table>"""
 
+    def logs(self, n: int = 25):
+        """
+        Print out the last n error log groups from error.log.
+
+        Parameters
+        ----------
+        n : Optional[int]
+            The number of log lines to print from the end of the error log.
+        """
+        error_log_path = self.directory / "error.log"
+        if not error_log_path.exists():
+            print("No error.log file found.")
+            return
+
+        with open(error_log_path, "r") as f:
+            lines = [line.rstrip("\n") for line in f]
+
+        for line in lines[-n:]:
+            print(line)
+
     def close(self):
         self._cm.__exit__(None, None, None)
         if self._cleanup_directory and (platform.system() != "Windows"):
